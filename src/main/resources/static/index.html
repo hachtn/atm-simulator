@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Web Console</title>
+    <style>
+        :root {
+            --bg: #f2efe8;
+            --panel: rgba(255, 252, 247, 0.92);
+            --panel-strong: #fffaf2;
+            --ink: #1c2a39;
+            --muted: #5b6775;
+            --accent: #0d5c63;
+            --accent-2: #c97b32;
+            --line: rgba(28, 42, 57, 0.12);
+            --success: #177245;
+            --danger: #b43f3f;
+            --shadow: 0 18px 45px rgba(28, 42, 57, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(201, 123, 50, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(13, 92, 99, 0.2), transparent 24%),
+                linear-gradient(135deg, #efe7da, var(--bg));
+        }
+
+        .shell {
+            width: min(1100px, calc(100% - 32px));
+            margin: 32px auto;
+            display: grid;
+            gap: 20px;
+        }
+
+        .hero,
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero {
+            padding: 28px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .eyebrow {
+            margin: 0;
+            font-size: 0.9rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            line-height: 0.95;
+            max-width: 11ch;
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 60ch;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .section-title {
+            margin: 0 0 16px;
+            font-size: 1.35rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-size: 0.92rem;
+            color: var(--muted);
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font: inherit;
+            color: var(--ink);
+            background: var(--panel-strong);
+        }
+
+        input:focus {
+            outline: 2px solid rgba(13, 92, 99, 0.25);
+            border-color: var(--accent);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font: inherit;
+            cursor: pointer;
+            transition: transform 0.18s ease, opacity 0.18s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        button.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        button.secondary {
+            background: rgba(13, 92, 99, 0.12);
+            color: var(--accent);
+        }
+
+        button.accent {
+            background: var(--accent-2);
+            color: white;
+        }
+
+        .status {
+            min-height: 50px;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(13, 92, 99, 0.08);
+            color: var(--ink);
+        }
+
+        .status.error {
+            background: rgba(180, 63, 63, 0.12);
+            color: var(--danger);
+        }
+
+        .status.success {
+            background: rgba(23, 114, 69, 0.12);
+            color: var(--success);
+        }
+
+        .balance-card {
+            display: grid;
+            gap: 10px;
+            align-content: start;
+        }
+
+        .balance-label {
+            margin: 0;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.82rem;
+        }
+
+        .balance-value {
+            margin: 0;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 0.95rem;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        th {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .empty {
+            color: var(--muted);
+            margin: 12px 0 0;
+        }
+
+        @media (max-width: 860px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <p class="eyebrow">ATM Web Console</p>
+            <h1>Manage account activity in one place.</h1>
+            <p>Check balances, post deposits or withdrawals, and review recent transactions from a lightweight browser dashboard.</p>
+        </section>
+
+        <section class="layout">
+            <div class="panel">
+                <h2 class="section-title">Account Actions</h2>
+                <div class="grid">
+                    <label>
+                        Account ID
+                        <input id="accountId" type="number" min="1" value="1">
+                    </label>
+                    <label>
+                        Amount
+                        <input id="amount" type="number" min="1" step="1000" value="10000">
+                    </label>
+                </div>
+
+                <div class="actions">
+                    <button class="primary" id="loadBalance">Check Balance</button>
+                    <button class="accent" id="deposit">Deposit</button>
+                    <button class="secondary" id="withdraw">Withdraw</button>
+                    <button class="secondary" id="loadTransactions">Transaction History</button>
+                </div>
+
+                <div class="status" id="status">Ready. Start by loading the balance for account 1.</div>
+            </div>
+
+            <aside class="panel balance-card">
+                <h2 class="section-title">Current Balance</h2>
+                <p class="balance-label">Live value</p>
+                <p class="balance-value" id="balanceValue">JPY 0</p>
+                <p class="empty">Sample accounts are available with IDs 1 and 2.</p>
+            </aside>
+        </section>
+
+        <section class="panel">
+            <h2 class="section-title">Recent Transactions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Branch</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody">
+                    <tr>
+                        <td colspan="5" class="empty">No transactions loaded yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        const accountIdInput = document.getElementById("accountId");
+        const amountInput = document.getElementById("amount");
+        const balanceValue = document.getElementById("balanceValue");
+        const statusBox = document.getElementById("status");
+        const transactionsBody = document.getElementById("transactionsBody");
+
+        const currency = new Intl.NumberFormat("ja-JP", {
+            style: "currency",
+            currency: "JPY",
+            maximumFractionDigits: 0
+        });
+
+        function getAccountId() {
+            return accountIdInput.value.trim();
+        }
+
+        function getAmount() {
+            return Number(amountInput.value);
+        }
+
+        function setStatus(message, type = "") {
+            statusBox.textContent = message;
+            statusBox.className = `status ${type}`.trim();
+        }
+
+        async function readError(response) {
+            try {
+                const data = await response.json();
+                return data.message || "Request failed";
+            } catch {
+                return "Request failed";
+            }
+        }
+
+        async function loadBalance() {
+            const accountId = getAccountId();
+            const response = await fetch(`/api/accounts/${accountId}/balance`);
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const balance = await response.json();
+            balanceValue.textContent = currency.format(balance);
+            setStatus(`Loaded balance for account ${accountId}.`, "success");
+        }
+
+        async function postMoney(path) {
+            const accountId = getAccountId();
+            const amount = getAmount();
+
+            const response = await fetch(`/api/accounts/${accountId}/${path}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount })
+            });
+
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            await loadBalance();
+            await loadTransactions();
+            setStatus(`${path === "deposit" ? "Deposit" : "Withdrawal"} completed successfully.`, "success");
+        }
+
+        async function loadTransactions() {
+            const accountId = getAccountId();
+            const response = await fetch(`/api/accounts/${accountId}/transactions`);
+            if (!response.ok) {
+                throw new Error(await readError(response));
+            }
+
+            const transactions = await response.json();
+            if (!transactions.length) {
+                transactionsBody.innerHTML = '<tr><td colspan="5" class="empty">No transactions found for this account.</td></tr>';
+                setStatus(`No transactions found for account ${accountId}.`, "success");
+                return;
+            }
+
+            transactionsBody.innerHTML = transactions.map(tx => `
+                <tr>
+                    <td>${new Date(tx.transactionTime).toLocaleString("ja-JP")}</td>
+                    <td>${tx.type}</td>
+                    <td>${currency.format(tx.amount)}</td>
+                    <td>${currency.format(tx.balanceAfter)}</td>
+                    <td>${tx.branchCode ?? "-"}</td>
+                </tr>
+            `).join("");
+            setStatus(`Loaded ${transactions.length} transaction(s).`, "success");
+        }
+
+        async function run(action) {
+            try {
+                setStatus("Loading...");
+                await action();
+            } catch (error) {
+                setStatus(error.message, "error");
+            }
+        }
+
+        document.getElementById("loadBalance").addEventListener("click", () => run(loadBalance));
+        document.getElementById("deposit").addEventListener("click", () => run(() => postMoney("deposit")));
+        document.getElementById("withdraw").addEventListener("click", () => run(() => postMoney("withdraw")));
+        document.getElementById("loadTransactions").addEventListener("click", () => run(loadTransactions));
+
+        run(loadBalance);
+    </script>
+</body>
+</html>

@@ -8,7 +8,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "accounts")
-
 public class Account {
 
     @Id
