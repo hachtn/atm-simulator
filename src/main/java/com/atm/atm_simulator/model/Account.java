@@ -1,5 +1,6 @@
 package com.atm.atm_simulator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,8 @@ public class Account {
     private String accountNumber;
     private long balance;
     private String accountHolder;
+
+    @JsonIgnore
     private String pin;
 
     public Long getId() {

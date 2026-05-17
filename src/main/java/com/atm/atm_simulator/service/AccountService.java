@@ -6,13 +6,20 @@ import com.atm.atm_simulator.model.Account;
 import com.atm.atm_simulator.model.Transaction;
 
 public interface AccountService {
-    Account getAccount(Long accountId);
 
-    long getBalance(Long accountId);
+    Account getAccountByNumber(String accountNumber);
 
-    void deposit(Long accountId, long amount);
+    long getBalance(String accountNumber);
 
-    void withdraw(Long accountId, long amount);
+    long deposit(String accountNumber, long amount);
 
-    List<Transaction> getTransactionHistory(Long accountId);
+    long withdraw(String accountNumber, long amount);
+
+    long transfer(String accountNumber, String targetAccountNumber, String targetBankName, String note, long amount);
+
+    long topUp(String accountNumber, String target, long amount);
+
+    void changePin(String accountNumber, String currentPin, String newPin);
+
+    List<Transaction> getTransactionHistory(String accountNumber);
 }

@@ -1,5 +1,6 @@
-INSERT INTO accounts (bank_code, branch_code, account_number, balance, account_holder, pin)
-VALUES ('MUFG', '001', '1234567', 100000, 'Nguyen Van A', '1234');
-
-INSERT INTO accounts (bank_code, branch_code, account_number, balance, account_holder, pin)
-VALUES ('MUFG', '002', '7654321', 50000, 'Tran Thi B', '5678');
+-- Sample accounts are initialized by DataInitializer so PIN values can be stored as BCrypt hashes.
+-- Accounts:
+--   1234567 / 1234 / Taro Tanaka / 100000
+--   7654321 / 5678 / Hanako Suzuki / 500000
+--   9999999 / 0000 / Jiro Yamada / 1000000
+SELECT 1;

@@ -1,402 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATM Web Console</title>
-    <style>
-        :root {
-            --bg: #f2efe8;
-            --panel: rgba(255, 252, 247, 0.92);
-            --panel-strong: #fffaf2;
-            --ink: #1c2a39;
-            --muted: #5b6775;
-            --accent: #0d5c63;
-            --accent-2: #c97b32;
-            --line: rgba(28, 42, 57, 0.12);
-            --success: #177245;
-            --danger: #b43f3f;
-            --shadow: 0 18px 45px rgba(28, 42, 57, 0.12);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--ink);
-            background:
-                radial-gradient(circle at top left, rgba(201, 123, 50, 0.18), transparent 28%),
-                radial-gradient(circle at top right, rgba(13, 92, 99, 0.2), transparent 24%),
-                linear-gradient(135deg, #efe7da, var(--bg));
-        }
-
-        .shell {
-            width: min(1100px, calc(100% - 32px));
-            margin: 32px auto;
-            display: grid;
-            gap: 20px;
-        }
-
-        .hero,
-        .panel {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-        }
-
-        .hero {
-            padding: 28px;
-            display: grid;
-            gap: 18px;
-        }
-
-        .eyebrow {
-            margin: 0;
-            font-size: 0.9rem;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--accent);
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(2.4rem, 6vw, 4.2rem);
-            line-height: 0.95;
-            max-width: 11ch;
-        }
-
-        .hero p {
-            margin: 0;
-            max-width: 60ch;
-            color: var(--muted);
-            font-size: 1.05rem;
-        }
-
-        .layout {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 20px;
-        }
-
-        .panel {
-            padding: 22px;
-        }
-
-        .section-title {
-            margin: 0 0 16px;
-            font-size: 1.35rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        label {
-            display: grid;
-            gap: 8px;
-            font-size: 0.92rem;
-            color: var(--muted);
-        }
-
-        input {
-            width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 12px 14px;
-            font: inherit;
-            color: var(--ink);
-            background: var(--panel-strong);
-        }
-
-        input:focus {
-            outline: 2px solid rgba(13, 92, 99, 0.25);
-            border-color: var(--accent);
-        }
-
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        button {
-            border: none;
-            border-radius: 999px;
-            padding: 12px 18px;
-            font: inherit;
-            cursor: pointer;
-            transition: transform 0.18s ease, opacity 0.18s ease;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-        }
-
-        button.primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        button.secondary {
-            background: rgba(13, 92, 99, 0.12);
-            color: var(--accent);
-        }
-
-        button.accent {
-            background: var(--accent-2);
-            color: white;
-        }
-
-        .status {
-            min-height: 50px;
-            margin-top: 16px;
-            padding: 14px 16px;
-            border-radius: 16px;
-            background: rgba(13, 92, 99, 0.08);
-            color: var(--ink);
-        }
-
-        .status.error {
-            background: rgba(180, 63, 63, 0.12);
-            color: var(--danger);
-        }
-
-        .status.success {
-            background: rgba(23, 114, 69, 0.12);
-            color: var(--success);
-        }
-
-        .balance-card {
-            display: grid;
-            gap: 10px;
-            align-content: start;
-        }
-
-        .balance-label {
-            margin: 0;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-size: 0.82rem;
-        }
-
-        .balance-value {
-            margin: 0;
-            font-size: clamp(2rem, 5vw, 3.4rem);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-            font-size: 0.95rem;
-        }
-
-        th,
-        td {
-            text-align: left;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--line);
-        }
-
-        th {
-            color: var(--muted);
-            font-weight: 600;
-        }
-
-        .empty {
-            color: var(--muted);
-            margin: 12px 0 0;
-        }
-
-        @media (max-width: 860px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nihon Bank ATM Simulator</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 </head>
 <body>
-    <main class="shell">
-        <section class="hero">
-            <p class="eyebrow">ATM Web Console</p>
-            <h1>Manage account activity in one place.</h1>
-            <p>Check balances, post deposits or withdrawals, and review recent transactions from a lightweight browser dashboard.</p>
-        </section>
 
-        <section class="layout">
-            <div class="panel">
-                <h2 class="section-title">Account Actions</h2>
-                <div class="grid">
-                    <label>
-                        Account ID
-                        <input id="accountId" type="number" min="1" value="1">
-                    </label>
-                    <label>
-                        Amount
-                        <input id="amount" type="number" min="1" step="1000" value="10000">
-                    </label>
-                </div>
+<div class="atm">
+  <div class="atm-top">
+    <div>
+      <div class="bank-name">Nihon Bank ATM</div>
+      <div class="bank-sub">Connected Spring Boot simulator</div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span class="status-text" id="statusText">Online</span>
+    </div>
+  </div>
 
-                <div class="actions">
-                    <button class="primary" id="loadBalance">Check Balance</button>
-                    <button class="accent" id="deposit">Deposit</button>
-                    <button class="secondary" id="withdraw">Withdraw</button>
-                    <button class="secondary" id="loadTransactions">Transaction History</button>
-                </div>
+  <div class="screen-frame">
+    <div class="screen">
+      <div class="screen-bar">
+        <span class="screen-bank" id="screenTitle">Welcome</span>
+        <span class="screen-time" id="screenTime"></span>
+      </div>
 
-                <div class="status" id="status">Ready. Start by loading the balance for account 1.</div>
-            </div>
+      <div class="view active" id="vWelcome">
+        <div class="welcome-center">
+          <span class="welcome-icon"><i class="ti ti-credit-card"></i></span>
+          <div class="welcome-title">Insert your card</div>
+          <div class="welcome-sub">Enter an account number, then continue to PIN</div>
+        </div>
+        <label class="field-label" for="accountNumberInput">Account Number</label>
+        <input class="jp-input welcome-input" id="accountNumberInput" type="text" inputmode="numeric" placeholder="1234567" />
+        <div class="pin-err pin-err-left" id="welcomeErr"></div>
+        <button class="insert-btn" onclick="insertCard()">
+          <i class="ti ti-credit-card"></i> Continue
+        </button>
+      </div>
 
-            <aside class="panel balance-card">
-                <h2 class="section-title">Current Balance</h2>
-                <p class="balance-label">Live value</p>
-                <p class="balance-value" id="balanceValue">JPY 0</p>
-                <p class="empty">Sample accounts are available with IDs 1 and 2.</p>
-            </aside>
-        </section>
+      <div class="view" id="vPin">
+        <div class="pin-label">Enter your 4-digit PIN</div>
+        <div class="pin-account" id="pinAccountLabel"></div>
+        <div class="pin-dots" id="pinDots">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+        </div>
+        <div class="numpad">
+          <button class="num-btn" onclick="appendPin('1')">1</button>
+          <button class="num-btn" onclick="appendPin('2')">2</button>
+          <button class="num-btn" onclick="appendPin('3')">3</button>
+          <button class="num-btn" onclick="appendPin('4')">4</button>
+          <button class="num-btn" onclick="appendPin('5')">5</button>
+          <button class="num-btn" onclick="appendPin('6')">6</button>
+          <button class="num-btn" onclick="appendPin('7')">7</button>
+          <button class="num-btn" onclick="appendPin('8')">8</button>
+          <button class="num-btn" onclick="appendPin('9')">9</button>
+          <button class="num-btn clear" onclick="clearPin()">Clear</button>
+          <button class="num-btn" onclick="appendPin('0')">0</button>
+          <button class="num-btn ok" onclick="confirmPin()">OK</button>
+        </div>
+        <div class="pin-err" id="pinErr"></div>
+      </div>
 
-        <section class="panel">
-            <h2 class="section-title">Recent Transactions</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Balance After</th>
-                        <th>Branch</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionsBody">
-                    <tr>
-                        <td colspan="5" class="empty">No transactions loaded yet.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-    </main>
+      <div class="view" id="vMenu">
+        <div class="menu-acct">
+          <span class="ma-left" id="menuAccountHolder">Guest</span>
+          <span class="ma-right" id="menuAccountNumber">****</span>
+        </div>
+        <div class="menu-grid">
+          <button class="menu-btn" onclick="openBalanceView()">
+            <span class="menu-icon"><i class="ti ti-wallet"></i></span>
+            <span class="menu-label-jp">Balance</span>
+            <span class="menu-label-en">View cash balance</span>
+          </button>
+          <button class="menu-btn" onclick="openWithdrawView()">
+            <span class="menu-icon"><i class="ti ti-cash"></i></span>
+            <span class="menu-label-jp">Withdraw</span>
+            <span class="menu-label-en">Take out cash</span>
+          </button>
+          <button class="menu-btn" onclick="openTransactionsView()">
+            <span class="menu-icon"><i class="ti ti-receipt-2"></i></span>
+            <span class="menu-label-jp">Transactions</span>
+            <span class="menu-label-en">Recent activity</span>
+          </button>
+          <button class="menu-btn" onclick="openTransferView()">
+            <span class="menu-icon"><i class="ti ti-arrows-exchange"></i></span>
+            <span class="menu-label-jp">Transfer</span>
+            <span class="menu-label-en">Send money out</span>
+          </button>
+          <button class="menu-btn" onclick="openTopUpView()">
+            <span class="menu-icon"><i class="ti ti-device-mobile"></i></span>
+            <span class="menu-label-jp">Top-up</span>
+            <span class="menu-label-en">Charge e-money</span>
+          </button>
+          <button class="menu-btn" onclick="openChangePinView()">
+            <span class="menu-icon"><i class="ti ti-lock"></i></span>
+            <span class="menu-label-jp">Change PIN</span>
+            <span class="menu-label-en">Update security</span>
+          </button>
+          <button class="menu-btn logout" onclick="logout()">
+            <span class="menu-icon"><i class="ti ti-logout"></i></span>
+            <span class="menu-label-jp">Exit</span>
+            <span class="menu-label-en">End session</span>
+          </button>
+        </div>
+      </div>
 
-    <script>
-        const accountIdInput = document.getElementById("accountId");
-        const amountInput = document.getElementById("amount");
-        const balanceValue = document.getElementById("balanceValue");
-        const statusBox = document.getElementById("status");
-        const transactionsBody = document.getElementById("transactionsBody");
+      <div class="view" id="vAction"></div>
+      <div class="view" id="vResult"></div>
+    </div>
+  </div>
 
-        const currency = new Intl.NumberFormat("ja-JP", {
-            style: "currency",
-            currency: "JPY",
-            maximumFractionDigits: 0
-        });
+  <div class="atm-bottom">
+    <div><div class="slot-label">Receipt</div><div class="slot-line"></div></div>
+    <div><div class="slot-label">Cash</div><div class="slot-line"></div></div>
+    <div><div class="slot-label">Card</div><div class="slot-line"></div></div>
+  </div>
+</div>
 
-        function getAccountId() {
-            return accountIdInput.value.trim();
-        }
-
-        function getAmount() {
-            return Number(amountInput.value);
-        }
-
-        function setStatus(message, type = "") {
-            statusBox.textContent = message;
-            statusBox.className = `status ${type}`.trim();
-        }
-
-        async function readError(response) {
-            try {
-                const data = await response.json();
-                return data.message || "Request failed";
-            } catch {
-                return "Request failed";
-            }
-        }
-
-        async function loadBalance() {
-            const accountId = getAccountId();
-            const response = await fetch(`/api/accounts/${accountId}/balance`);
-            if (!response.ok) {
-                throw new Error(await readError(response));
-            }
-
-            const balance = await response.json();
-            balanceValue.textContent = currency.format(balance);
-            setStatus(`Loaded balance for account ${accountId}.`, "success");
-        }
-
-        async function postMoney(path) {
-            const accountId = getAccountId();
-            const amount = getAmount();
-
-            const response = await fetch(`/api/accounts/${accountId}/${path}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ amount })
-            });
-
-            if (!response.ok) {
-                throw new Error(await readError(response));
-            }
-
-            await loadBalance();
-            await loadTransactions();
-            setStatus(`${path === "deposit" ? "Deposit" : "Withdrawal"} completed successfully.`, "success");
-        }
-
-        async function loadTransactions() {
-            const accountId = getAccountId();
-            const response = await fetch(`/api/accounts/${accountId}/transactions`);
-            if (!response.ok) {
-                throw new Error(await readError(response));
-            }
-
-            const transactions = await response.json();
-            if (!transactions.length) {
-                transactionsBody.innerHTML = '<tr><td colspan="5" class="empty">No transactions found for this account.</td></tr>';
-                setStatus(`No transactions found for account ${accountId}.`, "success");
-                return;
-            }
-
-            transactionsBody.innerHTML = transactions.map(tx => `
-                <tr>
-                    <td>${new Date(tx.transactionTime).toLocaleString("ja-JP")}</td>
-                    <td>${tx.type}</td>
-                    <td>${currency.format(tx.amount)}</td>
-                    <td>${currency.format(tx.balanceAfter)}</td>
-                    <td>${tx.branchCode ?? "-"}</td>
-                </tr>
-            `).join("");
-            setStatus(`Loaded ${transactions.length} transaction(s).`, "success");
-        }
-
-        async function run(action) {
-            try {
-                setStatus("Loading...");
-                await action();
-            } catch (error) {
-                setStatus(error.message, "error");
-            }
-        }
-
-        document.getElementById("loadBalance").addEventListener("click", () => run(loadBalance));
-        document.getElementById("deposit").addEventListener("click", () => run(() => postMoney("deposit")));
-        document.getElementById("withdraw").addEventListener("click", () => run(() => postMoney("withdraw")));
-        document.getElementById("loadTransactions").addEventListener("click", () => run(loadTransactions));
-
-        run(loadBalance);
-    </script>
+<script src="/app.js"></script>
 </body>
 </html>

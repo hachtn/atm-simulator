@@ -30,6 +30,7 @@ public class Transaction {
     private long amount;
     private long balanceAfter;
     private String branchCode;
+    private String description;
 
     @CreationTimestamp
     private LocalDateTime transactionTime;
@@ -77,6 +78,14 @@ public class Transaction {
 
     public void setBranchCode(String branchCode) {
         this.branchCode = branchCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getTransactionTime() {
