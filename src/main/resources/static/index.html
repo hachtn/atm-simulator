@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nihon Bank ATM Simulator</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+</head>
+<body>
+
+<div class="atm">
+  <div class="atm-top">
+    <div>
+      <div class="bank-name">Nihon Bank ATM</div>
+      <div class="bank-sub">Connected Spring Boot simulator</div>
+    </div>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span class="status-text" id="statusText">Online</span>
+    </div>
+  </div>
+
+  <div class="screen-frame">
+    <div class="screen">
+      <div class="screen-bar">
+        <span class="screen-bank" id="screenTitle">Welcome</span>
+        <span class="screen-time" id="screenTime"></span>
+      </div>
+
+      <div class="view active" id="vWelcome">
+        <div class="welcome-center">
+          <span class="welcome-icon"><i class="ti ti-credit-card"></i></span>
+          <div class="welcome-title">Insert your card</div>
+          <div class="welcome-sub">Enter an account number, then continue to PIN</div>
+        </div>
+        <label class="field-label" for="accountNumberInput">Account Number</label>
+        <input class="jp-input welcome-input" id="accountNumberInput" type="text" inputmode="numeric" placeholder="1234567" />
+        <div class="pin-err pin-err-left" id="welcomeErr"></div>
+        <button class="insert-btn" onclick="insertCard()">
+          <i class="ti ti-credit-card"></i> Continue
+        </button>
+      </div>
+
+      <div class="view" id="vPin">
+        <div class="pin-label">Enter your 4-digit PIN</div>
+        <div class="pin-account" id="pinAccountLabel"></div>
+        <div class="pin-dots" id="pinDots">
+          <div class="pin-dot" id="pd0"></div>
+          <div class="pin-dot" id="pd1"></div>
+          <div class="pin-dot" id="pd2"></div>
+          <div class="pin-dot" id="pd3"></div>
+        </div>
+        <div class="numpad">
+          <button class="num-btn" onclick="appendPin('1')">1</button>
+          <button class="num-btn" onclick="appendPin('2')">2</button>
+          <button class="num-btn" onclick="appendPin('3')">3</button>
+          <button class="num-btn" onclick="appendPin('4')">4</button>
+          <button class="num-btn" onclick="appendPin('5')">5</button>
+          <button class="num-btn" onclick="appendPin('6')">6</button>
+          <button class="num-btn" onclick="appendPin('7')">7</button>
+          <button class="num-btn" onclick="appendPin('8')">8</button>
+          <button class="num-btn" onclick="appendPin('9')">9</button>
+          <button class="num-btn clear" onclick="clearPin()">Clear</button>
+          <button class="num-btn" onclick="appendPin('0')">0</button>
+          <button class="num-btn ok" onclick="confirmPin()">OK</button>
+        </div>
+        <div class="pin-err" id="pinErr"></div>
+      </div>
+
+      <div class="view" id="vMenu">
+        <div class="menu-acct">
+          <span class="ma-left" id="menuAccountHolder">Guest</span>
+          <span class="ma-right" id="menuAccountNumber">****</span>
+        </div>
+        <div class="menu-grid">
+          <button class="menu-btn" onclick="openBalanceView()">
+            <span class="menu-icon"><i class="ti ti-wallet"></i></span>
+            <span class="menu-label-jp">Balance</span>
+            <span class="menu-label-en">View cash balance</span>
+          </button>
+          <button class="menu-btn" onclick="openWithdrawView()">
+            <span class="menu-icon"><i class="ti ti-cash"></i></span>
+            <span class="menu-label-jp">Withdraw</span>
+            <span class="menu-label-en">Take out cash</span>
+          </button>
+          <button class="menu-btn" onclick="openTransactionsView()">
+            <span class="menu-icon"><i class="ti ti-receipt-2"></i></span>
+            <span class="menu-label-jp">Transactions</span>
+            <span class="menu-label-en">Recent activity</span>
+          </button>
+          <button class="menu-btn" onclick="openTransferView()">
+            <span class="menu-icon"><i class="ti ti-arrows-exchange"></i></span>
+            <span class="menu-label-jp">Transfer</span>
+            <span class="menu-label-en">Send money out</span>
+          </button>
+          <button class="menu-btn" onclick="openTopUpView()">
+            <span class="menu-icon"><i class="ti ti-device-mobile"></i></span>
+            <span class="menu-label-jp">Top-up</span>
+            <span class="menu-label-en">Charge e-money</span>
+          </button>
+          <button class="menu-btn" onclick="openChangePinView()">
+            <span class="menu-icon"><i class="ti ti-lock"></i></span>
+            <span class="menu-label-jp">Change PIN</span>
+            <span class="menu-label-en">Update security</span>
+          </button>
+          <button class="menu-btn logout" onclick="logout()">
+            <span class="menu-icon"><i class="ti ti-logout"></i></span>
+            <span class="menu-label-jp">Exit</span>
+            <span class="menu-label-en">End session</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="view" id="vAction"></div>
+      <div class="view" id="vResult"></div>
+    </div>
+  </div>
+
+  <div class="atm-bottom">
+    <div><div class="slot-label">Receipt</div><div class="slot-line"></div></div>
+    <div><div class="slot-label">Cash</div><div class="slot-line"></div></div>
+    <div><div class="slot-label">Card</div><div class="slot-line"></div></div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
