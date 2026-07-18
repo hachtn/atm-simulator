@@ -57,8 +57,7 @@ public class AtmSessionController {
     @GetMapping("/balance")
     public ResponseEntity<BalanceResponse> getBalance(@RequestHeader("Authorization") String authorizationHeader) {
         Account account = requireAccount(authorizationHeader);
-        long balance = accountService.getBalance(account.getAccountNumber());
-        return ResponseEntity.ok(new BalanceResponse(balance));
+        return ResponseEntity.ok(new BalanceResponse(account.getBalance()));
     }
 
     @PostMapping("/withdraw")

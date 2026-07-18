@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.atm.atm_simulator.exception.AccountNotFoundException;
+import com.atm.atm_simulator.exception.AuthenticationFailedException;
 import com.atm.atm_simulator.model.Account;
 import com.atm.atm_simulator.model.Transaction;
 import com.atm.atm_simulator.model.TransactionType;
@@ -85,11 +86,32 @@ public class AccountServiceImpl implements AccountService {
         if (targetAccountNumber == null || targetAccountNumber.isBlank()) {
             throw new IllegalArgumentException("Target account number is required");
         }
+        if (accountNumber.equals(targetAccountNumber)) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
         if (amount <= 0) {
             throw new IllegalArgumentException("Transfer amount must be greater than zero");
         }
 
-        Account account = lockAccount(accountNumber);
+        // Detect internal transfer before locking to decide the locking strategy.
+        boolean isInternal = accountRepository.findByAccountNumber(targetAccountNumber).isPresent();
+
+        Account account;
+        Account target = null;
+
+        if (isInternal) {
+            // Lock both accounts in consistent lexicographic order to prevent deadlock.
+            if (accountNumber.compareTo(targetAccountNumber) < 0) {
+                account = lockAccount(accountNumber);
+                target = lockAccount(targetAccountNumber);
+            } else {
+                target = lockAccount(targetAccountNumber);
+                account = lockAccount(accountNumber);
+            }
+        } else {
+            account = lockAccount(accountNumber);
+        }
+
         debit(account, amount);
         accountRepository.save(account);
 
@@ -99,8 +121,15 @@ public class AccountServiceImpl implements AccountService {
                 note == null || note.isBlank() ? "" : " - " + note.trim());
         recordTransaction(account, TransactionType.TRANSFER, amount, description);
 
-        log.info("Transfer completed for account={}, targetAccount={}, amount={}, balanceAfter={}",
-                accountNumber, targetAccountNumber, amount, account.getBalance());
+        if (target != null) {
+            target.setBalance(target.getBalance() + amount);
+            accountRepository.save(target);
+            recordTransaction(target, TransactionType.TRANSFER_IN, amount,
+                    "Transfer received from " + accountNumber);
+        }
+
+        log.info("Transfer completed: from={}, to={}, amount={}, internal={}, balanceAfter={}",
+                accountNumber, targetAccountNumber, amount, isInternal, account.getBalance());
         return account.getBalance();
     }
 
@@ -140,7 +169,7 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = lockAccount(accountNumber);
         if (!passwordEncoder.matches(currentPin, account.getPin())) {
-            throw new IllegalArgumentException("Current PIN is incorrect");
+            throw new AuthenticationFailedException();
         }
 
         account.setPin(passwordEncoder.encode(newPin));
